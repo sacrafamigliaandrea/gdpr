@@ -1,0 +1,1491 @@
+<html lang="it"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Policy Scolastiche – Sacra Famiglia Orzinuovi</title>
+<style>
+    :root {
+        --c-segr-bg: #fffbf2; 
+        --c-segr-bord: #d4ac0d; 
+        --c-doc-bg: #f4fbf7;  
+        --c-doc-bord: #2d6a4f;  
+        --c-prim-bg: #fdfefe; 
+        --c-prim-bord: #c0392b; 
+        --c-sec-bg: #f8f9fa;  
+        --c-sec-bord: #5d6d7e;  
+        --header-bg: #2c3e50;
+        --header-text: #ecf0f1;
+        --tag-sys: #2980b9;
+        --tag-act: #8e44ad;
+        --tag-ref: #c0392b;
+    }
+
+    body {
+        font-family: 'Segoe UI', 'Roboto', sans-serif;
+        background-color: #e5e7e9;
+        margin: 0;
+        padding: 20px;
+        padding-top: 70px;
+        color: #212529;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .toolbar {
+        position: fixed; top: 0; left: 0; right: 0;
+        background: #1a252f; color: white;
+        padding: 10px 20px;
+        display: flex; gap: 15px; align-items: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 2000;
+        border-bottom: 3px solid #34495e;
+    }
+    .btn {
+        border: none; padding: 6px 14px; border-radius: 3px; 
+        font-weight: 600; cursor: pointer; font-size: 12px; letter-spacing: 0.5px;
+        color: white; transition: all 0.2s; text-transform: uppercase;
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-sys { background: var(--tag-sys); }
+    .btn-act { background: var(--tag-act); }
+    .btn-ref { background: var(--tag-ref); }
+    .btn-save { background: #27ae60; }
+    .btn-print { background: #c0392b; }
+
+    .ref-banner {
+        background: #fef9e7; border: 2px solid #f9e79f; border-radius: 4px;
+        padding: 10px 16px; margin-bottom: 16px; font-size: 11px; line-height: 1.6; color: #7d6608;
+    }
+    .ref-banner strong { color: #b7950b; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        font-size: 11px;
+        table-layout: fixed; 
+    }
+
+    thead th {
+        background-color: var(--header-bg);
+        color: var(--header-text);
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 1px;
+        padding: 10px 5px;
+        border: 1px solid #17202a;
+        font-weight: 700;
+    }
+
+    .th-role-segr { background-color: #b7950b !important; color: white !important; }
+    .th-role-doc { background-color: #1e8449 !important; color: white !important; }
+    .th-role-prim { background-color: #c0392b !important; color: white !important; }
+    .th-role-sec { background-color: #2e4053 !important; color: white !important; }
+
+    td {
+        padding: 6px 8px;
+        border: 1px solid #dcdcdc;
+        vertical-align: top;
+        line-height: 1.4;
+    }
+
+    .col-doc { width: 9%; background: #f2f3f4; font-weight: 700; color: #2c3e50; border-right: 2px solid #bdc3c7; }
+    .col-scope { width: 10%; background: #fff; font-style: italic; color: #566573; }
+    .col-segr { width: 16%; background-color: var(--c-segr-bg); border-bottom: 1px solid var(--c-segr-bord); }
+    .col-docent { width: 17%; background-color: var(--c-doc-bg); border-bottom: 1px solid var(--c-doc-bord); }
+    .col-prim { width: 15%; background-color: var(--c-prim-bg); border-bottom: 1px solid var(--c-prim-bord); }
+    .col-sec { width: 15%; background-color: var(--c-sec-bg); border-bottom: 1px solid var(--c-sec-bord); }
+    .col-check { width: 12%; background: #f8f9fa; font-size: 10px; color: #555; }
+
+    /* Riga separatore di sezione */
+    .section-row td {
+        background: #2c3e50 !important; color: #ecf0f1 !important;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+        font-size: 10px; padding: 6px 10px; border-color: #17202a;
+    }
+
+    [contenteditable="true"]:hover { background-color: #fff; outline: 1px dashed #999; }
+    [contenteditable="true"]:focus { background-color: #fff; outline: 2px solid #2980b9; z-index: 10; }
+
+    ul { margin: 0; padding-left: 14px; }
+    li { margin-bottom: 3px; }
+    
+    .tag {
+        display: inline-block; padding: 2px 5px; border-radius: 3px;
+        font-size: 9px; font-weight: 700; color: white; text-transform: uppercase;
+        margin-right: 4px; margin-bottom: 2px; vertical-align: middle;
+        cursor: default;
+    }
+    .t-sys { background-color: var(--tag-sys); }
+    .t-act { background-color: var(--tag-act); }
+    .t-ref { background-color: var(--tag-ref); font-size: 8px; }
+
+    @media print {
+        @page { size: A3 landscape; margin: 8mm; }
+        body { padding: 0; background: white; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        .toolbar { display: none; }
+        .ref-banner { break-inside: avoid; }
+        thead { display: table-header-group; } 
+        tr { page-break-inside: avoid; }
+        .col-segr { background-color: var(--c-segr-bg) !important; }
+        .col-docent { background-color: var(--c-doc-bg) !important; }
+        .col-prim { background-color: var(--c-prim-bg) !important; }
+        .col-sec { background-color: var(--c-sec-bg) !important; }
+        .th-role-segr { background-color: #b7950b !important; color: white !important; }
+        .th-role-doc { background-color: #1e8449 !important; color: white !important; }
+        .th-role-prim { background-color: #c0392b !important; color: white !important; }
+        .th-role-sec { background-color: #2e4053 !important; color: white !important; }
+        .section-row td { background: #2c3e50 !important; color: #ecf0f1 !important; }
+    }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+    <span style="font-weight:700; font-size: 1.2em; letter-spacing: 1px;">POLICY MASTER CHART</span>
+    <span style="font-size:10px; opacity:0.6; margin-left:4px;">Sacra Famiglia – Orzinuovi</span>
+    <span style="border-right:1px solid #555; height:24px; margin:0 15px;"></span>
+    
+    <button class="btn btn-sys" onclick="askTag('t-sys')">+ Sistema</button>
+    <button class="btn btn-act" onclick="askTag('t-act')">+ Azione</button>
+    <button class="btn btn-ref" onclick="askTag('t-ref')">+ Rif. Norm.</button>
+    
+    <span style="flex-grow: 1;"></span>
+    <button class="btn" style="background:#8e44ad;" onclick="saveToSheets()">&#x2601; Salva su Sheets</button>
+    <button class="btn btn-save" onclick="downloadHTML()">&#x1F4BE; Salva HTML</button>
+    <button class="btn btn-print" onclick="window.print()">&#x1F5A8; Stampa PDF</button>
+</div>
+
+<!-- BANNER RIFERIMENTI NORMATIVI -->
+<div class="ref-banner">
+    <strong>FONTI NORMATIVE INTEGRATE:</strong>
+    Regolamento Uso Strumenti Digitali – Prot. 09/2026 – Delibera CdI n. 36 del 07/01/2026 (Sez. 1-5: Cellulare, iPad, Profilo Scolastico, AI, Sanzioni) &nbsp;|&nbsp;
+    DPR 249/1998 – Statuto Studentesse e Studenti &nbsp;|&nbsp;
+    D.P.R. 134/2025 &nbsp;|&nbsp;
+    GDPR – Reg. UE 2016/679 &nbsp;|&nbsp;
+    AI Act – Reg. UE 2024/1689 &nbsp;|&nbsp;
+    <strong style="color:#c0392b;">Linee Guida MIM per l'introduzione dell'IA nelle Istituzioni scolastiche – V.1.0 – 09/08/2025</strong> &nbsp;|&nbsp;
+    Linee Guida UNESCO AI nell'Istruzione &nbsp;|&nbsp;
+    D.Lgs. 196/2003 (Codice Privacy) art. 2-quinquies (età digitale minori: 14 anni) &nbsp;|&nbsp;
+    Percorso di Cittadinanza Digitale in 15 tappe – A.S. 2025/2026 (Cerioli)
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th colspan="2" style="width: 19%; background: #2c3e50;">AMBITO OPERATIVO</th>
+            <th class="th-role-segr">SEGRETERIA / ATA</th>
+            <th class="th-role-doc">DOCENTI</th>
+            <th class="th-role-prim">ALUNNI PRIMARIA</th>
+            <th class="th-role-sec">ALUNNI SECONDARIA</th>
+            <th style="background:#95a5a6; color:#fff;">CONTROLLI</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- SEZIONE A: PIATTAFORME E APPLICATIVI                         -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <tr class="section-row">
+            <td colspan="7">A — PIATTAFORME E APPLICATIVI</td>
+        </tr>
+
+        <!-- ═══ 1A. REGISTRO ELETTRONICO ═══ -->
+        <tr>
+            <td class="col-doc">1A. Registro Elettronico</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">Mastercom PRO</span><br>
+                Gestione amministrativa, didattica, scrutini, comunicazioni, protocollo.<br>
+                <strong>Attivazione Mastercom: settembre 2026 (A.S. 2026/2027).</strong><br>
+                <span style="font-size:9px; color:#999;">A.S. 2025/2026: ancora attivi ScuolaOnLine (registro) + Segremat-web (gestionale segreteria) — Soluzione S.r.l., Milano. Entrambi i sistemi restano nel registro trattamenti fino a dismissione completa.</span>
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">AREA AMMINISTRATIVA</span>
+                <ul>
+                    <li>Gestione anagrafica alunni/famiglie/personale.</li>
+                    <li>Gestione completa rette, pagamenti e solleciti automatici.</li>
+                    <li>Gestione movimenti e conti correnti.</li>
+                    <li>Emissione ricevute, dichiarazioni, fatturazione elettronica.</li>
+                    <li><strong>Modulo pagamenti on-line.</strong></li>
+                    <li>Collegamento a contabilità/bilancio (a richiesta).</li>
+                    <li><strong>Invio dati all'anagrafe tributaria.</strong></li>
+                </ul>
+                <span class="tag t-sys">AREA PROTOCOLLO</span>
+                <ul>
+                    <li>Registro di protocollo con predisposizione invio in conservazione.</li>
+                    <li>Gestione protocollo riservato e titolario.</li>
+                    <li>Documenti in entrata/uscita con configurazione e-mail istituzionali.</li>
+                    <li>Archiviazione documentale allegati (10 GB).</li>
+                </ul>
+                <span class="tag t-sys">SICUREZZA</span>
+                <ul>
+                    <li>Profili di accesso differenziati: Presidenza, Segreteria, Segreteria base, Presidi di settore.</li>
+                    <li>Password criptata con algoritmo AES 256 bit.</li>
+                    <li>Comunicazioni su protocollo HTTPS/SSL.</li>
+                    <li>Backup a cura del fornitore: eseguito più volte al giorno su server dedicati e delocalizzati.</li>
+                    <li>Securecode card opzionale per protezione ulteriore dell'accesso.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-sys">AREA REGISTRO</span>
+                <ul>
+                    <li>Registro di classe e del docente v7.6/2026 (WebApp).</li>
+                    <li>Modulo scrutinio elettronico (proposte e tabellone automatico).</li>
+                    <li>Sistema Messenger: messaggistica con utenti certificati.</li>
+                    <li>Comunicazione tramite App dedicata.</li>
+                    <li>Gestione colloqui (in presenza o videoconference integrata).</li>
+                </ul>
+                <span class="tag t-sys">AREA DIDATTICA</span>
+                <ul>
+                    <li>Gestione classi (orario, eventi, gite).</li>
+                    <li>Gestione sezione stampe e scrutini.</li>
+                    <li>Invio flussi al SIDI Ministeriale.</li>
+                </ul>
+                <span class="tag t-sys">PROFILI</span>
+                <ul>
+                    <li>Livelli: Coordinatori, Docenti. Funzioni specifiche per ruolo.</li>
+                    <li>Ogni utente gestisce autonomamente il proprio account.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">N.A.</span>
+                <ul>
+                    <li>Nessuna credenziale studente attiva.</li>
+                    <li>Accesso esclusivo tramite account genitore/tutore.</li>
+                    <li>Comunicazioni scuola-famiglia gestite dal docente tramite Messenger.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-sys">Credenziali Studente</span>
+                <ul>
+                    <li>Accesso con credenziali personali (profilo Alunni).</li>
+                    <li>Visualizzazione voti, assenze, note.</li>
+                    <li>Consultazione compiti assegnati.</li>
+                    <li>Quaderno elettronico (WebApp + App).</li>
+                    <li>Sistema Messenger per comunicazioni certificate.</li>
+                    <li><strong>Divieto di condivisione credenziali con terzi.</strong></li>
+                    <li>Password criptata AES 256 bit; gestione autonoma.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Log accessi (audit annuale).</li>
+                    <li>Coerenza voti inseriti vs. verbali scrutinio.</li>
+                    <li>Verifica completezza registri a fine quadrimestre.</li>
+                    <li>Controllo regolarità protocollo (semestrale).</li>
+                    <li>Verifica backup provider (SLA) — annuale.</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 1B. PIATTAFORME DIDATTICHE ═══ -->
+        <tr>
+            <td class="col-doc">1B. Piattaforme Didattiche</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">Google Workspace for Education Fundamentals</span><br>
+                Classroom, Drive, Meet, Documenti, Fogli, Presentazioni, Moduli.<br>
+                Dominio: <strong>@sacrafamiglia.education</strong>. Gmail disabilitata per studenti.
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">Admin Console</span>
+                <ul>
+                    <li>Gestione riservata all'Animatore Digitale.</li>
+                    <li>Creazione e disattivazione account istituzionali (<strong>@sacrafamiglia.education</strong>).</li>
+                    <li>Configurazione OU (Unità Organizzative) per profili differenziati (docenti, studenti primaria, studenti secondaria).</li>
+                    <li>Policy password: requisiti standard di sicurezza, senza scadenza.</li>
+                    <li>Gestione permessi applicazioni di terze parti.</li>
+                    <li>Monitoraggio storage complessivo del dominio.</li>
+                </ul>
+                <span style="font-size:9px; color:#999;">Nota: precedente account Gmail generico (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5427353726353235393d33383d357a39353d38143339353d387a373b39">[email&#160;protected]</a>) utilizzato per Google Moduli raccolta iscrizioni — da migrare su dominio istituzionale.</span>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-sys">Google Classroom</span>
+                <ul>
+                    <li>Creazione e gestione corsi per classe/materia.</li>
+                    <li>Caricamento e organizzazione materiali di studio.</li>
+                    <li>Assegnazione compiti con scadenza e valutazione.</li>
+                    <li>Utilizzo Stream per comunicazioni di classe.</li>
+                </ul>
+                <span class="tag t-act">Google Drive</span>
+                <ul>
+                    <li>Account istituzionale docente: 100 GB.</li>
+                    <li>Condivisione modelli verbali, curricoli, materiali orientamento.</li>
+                    <li>Organizzazione in directory per anno/classe.</li>
+                    <li><strong>Divieto di archiviare dati sensibili alunni su Drive personale.</strong></li>
+                    <li>Pulizia annuale file obsoleti.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-sys">Account Studente</span>
+                <ul>
+                    <li>Accesso supervisionato dal docente in aula.</li>
+                    <li>Visualizzazione materiali condivisi dagli insegnanti.</li>
+                    <li>Consegna compiti solo tramite Classroom (se attivato dal docente).</li>
+                    <li>Gmail disabilitato da Admin Console (solo Drive/Classroom).</li>
+                    <li>Drive con spazio limitato.</li>
+                </ul>
+                <span style="font-size:9px; color:#999;">Nota storica: le classi 3ª-4ª-5ª primaria utilizzavano account @gmail personali. Migrazione completata su dominio @sacrafamiglia.education.</span>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-sys">Account Studente</span>
+                <ul>
+                    <li>Accesso con credenziali istituzionali personali.</li>
+                    <li>Consegna compiti ed elaborati tramite Classroom.</li>
+                    <li>Drive per archiviazione materiali scolastici.</li>
+                    <li><strong>Vietato condividere file con account esterni al dominio.</strong></li>
+                    <li><strong>Vietato utilizzare l'account per iscrizioni a servizi non scolastici.</strong></li>
+                </ul>
+                <span style="font-size:9px; color:#999;">Nota: non vengono salvate password degli studenti sulle postazioni Mac del laboratorio.</span>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Verifica storage per utente (trimestrale).</li>
+                    <li>Audit permessi di condivisione (semestrale).</li>
+                    <li>Controllo app terze parti autorizzate (Admin Console).</li>
+                    <li>Report attività utenti via Admin Console.</li>
+                    <li>Verifica coerenza account attivi vs. studenti iscritti (inizio anno).</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 1C. SITO WEB ISTITUZIONALE ═══ -->
+        <tr>
+            <td class="col-doc">1C. Sito Web</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">Soluzione-web</span><br>
+                sacrafamiglia.education<br>
+                CMS proprietario (sistema autore)
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">Admin CMS</span>
+                <ul>
+                    <li>Accesso segreteria per creazione/modifica pagine e contenuti.</li>
+                    <li>Credenziali di accesso con profilo Admin.</li>
+                    <li>Pubblicazione contenuti: solo materiale autorizzato dalla Dirigenza.</li>
+                    <li>Pubblicazione foto alunni: <strong>solo con liberatoria GDPR valida</strong>.</li>
+                    <li>Dominio registrato presso Instra (NZ) — Registry ID: 7b3c4d061ca441d0bb332af538adccc2-DONUTS.</li>
+                </ul>
+                <span style="font-size:9px; color:#999;">Fornitore: Soluzione S.r.l., Via V. Pisani 7 – Milano. PEC: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2b5844475e514244454e6b445d4e595b4e4805425f">[email&#160;protected]</a>. P.IVA: 12110930158.</span>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <ul>
+                    <li>Nessun accesso diretto al CMS (se necessario, tramite segreteria).</li>
+                    <li>Segnalare contenuti da pubblicare alla segreteria con materiale già validato.</li>
+                    <li>Verificare correttezza dei propri contenuti prima della richiesta di pubblicazione.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">N.A.</span>
+                <ul><li>Nessun accesso.</li></ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">N.A.</span>
+                <ul><li>Nessun accesso.</li></ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Verifica aggiornamento contenuti (mensile).</li>
+                    <li>Controllo conformità GDPR foto pubblicate (trimestrale).</li>
+                    <li>Rinnovo dominio e hosting (annuale).</li>
+                    <li>Verifica certificato SSL attivo.</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 1D. ECOSISTEMA WEB APP CITTADINANZA DIGITALE ═══ -->
+        <tr>
+            <td class="col-doc">1D. Web App Cittadinanza Digitale</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">GitHub Pages</span>
+                <span class="tag t-sys">Google Apps Script</span><br>
+                15 web app didattiche (Percorso Cittadinanza Digitale A.S. 2025/2026).<br>
+                Deploy: GitHub Pages.<br>
+                Raccolta dati: image pixel → Google Sheets via Apps Script (doGet).<br>
+                <span style="font-size:9px;color:#999;">Progetto Ferraboschi/Cerioli. Framework IN+IA. Tutti i diritti riservati.</span>
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">N.A.</span>
+                <ul>
+                    <li>Nessun ruolo operativo diretto.</li>
+                    <li>Il Google Sheet di raccolta dati è accessibile solo all'Animatore Digitale e alla Dirigenza.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Supervisione Didattica</span>
+                <ul>
+                    <li>Le 15 tappe si svolgono in laboratorio sotto guida dell'Animatore Digitale o del docente di classe.</li>
+                    <li>4 fasi progressive: Consapevolezza (tappe 1-5), Protezione (6-10), Azione (11-14), Responsabilità (15).</li>
+                    <li>Dati raccolti: <strong>solo completamento tappa e punteggi aggregati</strong> — nessun dato identificativo diretto transita nel pixel.</li>
+                    <li>Strumenti famiglia: Guida Genitori (17 sez.), CyberEscape Famiglia, Patto Digitale di Famiglia.</li>
+                    <li>Metodologie: Dewey, Bruner, Vygotskij, gamification, metacognizione (Flavell).</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Uso Guidato</span>
+                <ul>
+                    <li>Accesso alle web app solo in laboratorio con il docente.</li>
+                    <li>Non è richiesto login individuale.</li>
+                    <li>Nessun dato personale inserito dallo studente nelle app.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Uso Guidato + Autonomo</span>
+                <ul>
+                    <li>Accesso in laboratorio e su iPad personale via WiFi SacraFamiglia-Studenti.</li>
+                    <li>App principali: CyberEscape (12+10 missioni), Commissariato Digitale (10 casi penali), Il Voto che Ruba (50 messaggi), Cyber Sentinel, Cyber Attack.</li>
+                    <li>Sistema gamification: XP, livelli, gradi, classifiche NPC.</li>
+                    <li><strong>Vietato inserire dati personali reali</strong> (nomi, contatti) nelle simulazioni.</li>
+                    <li>Gli avatar e i nomi nei simulatori sono fittizi.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Audit Google Sheet raccolta dati: verifica assenza dati identificativi (trimestrale).</li>
+                    <li>Verifica CSP (Content Security Policy) delle web app (semestrale).</li>
+                    <li>Controllo funzionamento image pixel → Sheets (mensile).</li>
+                    <li>Verifica copyright e protezioni JS attive (right-click, keyboard shortcuts, console log).</li>
+                    <li>Report completamento percorso per classe (fine anno).</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 1E. NOTEBOOKLM & CANVA EDUCATION ═══ -->
+        <tr>
+            <td class="col-doc">1E. NotebookLM &amp; Canva Education</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">Google NotebookLM</span>
+                <span class="tag t-sys">Canva Education</span><br>
+                <span class="tag t-ref">DA VALUTARE CON DPO</span><br>
+                NotebookLM: Core Service Google Workspace for Education (ago 2025). Disponibile per tutte le età.<br>
+                Canva Education: piattaforma terza, GDPR/COPPA compliant, richiede consenso genitoriale under 14 (art. 2-quinquies D.Lgs. 196/2003).
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">Adempimenti DPO</span>
+                <ul>
+                    <li><strong>NotebookLM:</strong> già coperto dal DPA Google Workspace for Education. Google agisce come responsabile del trattamento. Dati non esaminati da revisori umani, non usati per training AI.</li>
+                    <li><strong>Canva:</strong> necessaria nomina a responsabile del trattamento ex art. 28 GDPR separata. Informativa dedicata. Consenso genitoriale per studenti under 14.</li>
+                    <li>Registro trattamenti: aggiornare con entrambi i servizi.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Utilizzo Didattico</span>
+                <ul>
+                    <li><strong>NotebookLM:</strong> strumento di studio AI-powered. Caricamento fonti (PDF, siti, video) per generare sintesi, quiz, guide studio, audio overview.</li>
+                    <li>Il docente crea notebook e li condivide con la classe (solo intra-organizzazione).</li>
+                    <li><strong>Vietato caricare fonti contenenti dati personali di studenti</strong> (PEI, PDP, certificati).</li>
+                    <li><strong>Canva:</strong> creazione materiali visivi, poster, presentazioni, infografiche.</li>
+                    <li>Integrazione con Google Classroom per assegnazione compiti.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Da Definire</span>
+                <ul>
+                    <li><strong>NotebookLM:</strong> OFF di default per K-12. L'Admin deve attivarlo esplicitamente.</li>
+                    <li>Valutare attivazione solo per classi 4ª-5ª con supervisione docente.</li>
+                    <li><strong>Canva:</strong> utilizzo possibile solo con account Canva Education creato dal docente e consenso genitoriale.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Da Definire</span>
+                <ul>
+                    <li><strong>NotebookLM:</strong> accesso tramite account @sacrafamiglia.education. Norme contenuti più severe per under 18. Notebook condivisibili solo intra-dominio.</li>
+                    <li>Vietato caricare documenti con dati personali propri o altrui.</li>
+                    <li><strong>Canva:</strong> accesso via SSO Google. Contenuti safe-for-school con filtri ML. Termini di ricerca bloccati.</li>
+                    <li>Studenti under 14: consenso genitoriale obbligatorio (D.Lgs. 196/2003 art. 2-quinquies).</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li><strong>Pre-attivazione:</strong> parere DPO, informativa famiglie, raccolta consensi under 14.</li>
+                    <li>Verifica impostazioni Admin Console: NotebookLM ON/OFF per OU studenti (da configurare).</li>
+                    <li>Audit notebook condivisi: assenza dati personali (semestrale).</li>
+                    <li>Verifica DPA Canva: aggiornamento annuale.</li>
+                    <li>Monitoraggio utilizzo via Admin Console (trimestrale).</li>
+                </ul>
+            </td>
+        </tr>
+
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- SEZIONE B: DEVICE E BYOD                                     -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <tr class="section-row">
+            <td colspan="7">B — DEVICE, BYOD E PROFILO SCOLASTICO</td>
+        </tr>
+
+        <!-- ═══ 2. SMARTPHONE ═══ -->
+        <tr>
+            <td class="col-doc">2A. Smartphone</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-ref">Reg. Prot. 09/2026 – Sez. 1</span><br>
+                <span class="tag t-ref">DPR 249/1998</span>
+                <span class="tag t-ref">D.P.R. 134/2025</span><br>
+                Divieto di introduzione e utilizzo cellulare
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">Custodia</span>
+                <ul>
+                    <li>Gestione deposito temporaneo smartphone in segreteria per i casi autorizzati dalla Dirigenza.</li>
+                    <li>Registrazione entrata/uscita del dispositivo depositato.</li>
+                    <li>Il deposito NON costituisce sequestro ma misura organizzativa e preventiva.</li>
+                    <li>Comunicazioni urgenti studenti-famiglie: gestite tramite uffici di presidenza e segreteria.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Vigilanza</span>
+                <ul>
+                    <li>Dovere di vigilanza sui comportamenti degli alunni in tutti gli spazi scolastici.</li>
+                    <li>I docenti possono tenere lo smartphone personale ma <strong>non utilizzarlo durante attività didattica</strong>.</li>
+                    <li>In caso di infrazione studente: ritiro immediato del cellulare e consegna in presidenza.</li>
+                    <li>Segnalazione ai genitori dell'avvenuto ritiro.</li>
+                    <li>Anche visite guidate e viaggi d'istruzione = "attività didattiche" → stesso divieto.</li>
+                    <li>In gita: eventuale riconsegna temporanea solo per documentazione e comunicazioni con famiglie.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Divieto Assoluto</span>
+                <ul>
+                    <li><strong>Vietato introdurre lo smartphone nei locali scolastici</strong> (anche se spento o in modalità silenziosa).</li>
+                    <li>Il divieto è esteso allo scuolabus.</li>
+                    <li>Eccezione: solo su autorizzazione della Dirigenza dietro richiesta motivata dei genitori, per uso destinato a tempi NON scolastici → deposito spento in segreteria all'ingresso, ritiro all'uscita.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Divieto Assoluto</span>
+                <ul>
+                    <li><strong>Vietato introdurre lo smartphone nei locali scolastici</strong> (anche se spento o in modalità silenziosa).</li>
+                    <li>Il divieto è esteso allo scuolabus.</li>
+                    <li>Eccezione: solo su autorizzazione della Dirigenza dietro richiesta motivata dei genitori → deposito spento in segreteria.</li>
+                    <li>Comunicazioni urgenti: tramite presidenza/segreteria.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Vigilanza attiva docenti in tutti gli spazi.</li>
+                    <li>Registro depositi segreteria (entrata/uscita).</li>
+                    <li>Note disciplinari su Registro Elettronico.</li>
+                    <li>Sanzioni: vedi Sez. 5 Regolamento (impatto su voto condotta).</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 2B. iPad & BYOD ═══ -->
+        <tr>
+            <td class="col-doc">2B. iPad &amp; BYOD</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-ref">Reg. Prot. 09/2026 – Sez. 2-3</span><br>
+                <span class="tag t-sys">iPad</span> Device di proprietà della famiglia.<br>
+                <span class="tag t-sys">Apple Configurator</span> MDM per profilo scolastico H24.<br>
+                <span style="font-size:9px; color:#999;">Migrazione prevista a Apple Business Manager (nuovo MDM Apple) — in attesa rilascio. Nessun dato di geolocalizzazione raccolto dal profilo attuale.</span>
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">PC Windows</span>
+                <ul>
+                    <li>La segreteria non dispone di device mobile.</li>
+                    <li>PC Windows aggiornato con antivirus attivo.</li>
+                    <li>Aggiornamenti O.S. e antivirus: automatici, verifica mensile.</li>
+                </ul>
+                <span class="tag t-sys">NAS</span>
+                <ul>
+                    <li>NAS di rete per condivisione documenti in locale (2 HD).</li>
+                    <li>Accesso solo da rete cablata su IP statico.</li>
+                    <li>Accesso a cartelle con password (cambio ogni 3 mesi).</li>
+                    <li>Contiene documenti Office (segreteria). Non contiene dati sensibili.</li>
+                    <li>Backup automatico NAS → Google Drive istituzionale (100 GB).</li>
+                    <li>Backup incrementale giornaliero su PC "segre1".</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-sys">Device Personale</span>
+                <ul>
+                    <li>iPad o MacBook personale del docente con Apple ID proprio.</li>
+                    <li>iMessage utilizzato per gruppo docenti e gruppi classe.</li>
+                    <li>Responsabilità personale su aggiornamento O.S. e sicurezza del device.</li>
+                    <li><strong>Vietato archiviare dati sensibili alunni su device personale non protetto.</strong></li>
+                </ul>
+                <span class="tag t-act">Firewall</span>
+                <ul>
+                    <li>Fortigate 60F – MAC filtering attivo.</li>
+                    <li>SSID dedicato: SacraFamiglia-DOCENTI.</li>
+                    <li>QoS: priorità banda per device docenti.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Divieto Device Personali</span>
+                <ul>
+                    <li><strong>Vietato portare device personali a scuola</strong> (smartphone, tablet, smartwatch con connettività).</li>
+                    <li>Necessità didattiche soddisfatte con device della scuola sotto supervisione docente.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-ref">Reg. Sez. 2</span>
+                <span class="tag t-sys">iPad BYOD</span>
+                <ul>
+                    <li>iPad di proprietà della famiglia. Responsabilità finale: genitori.</li>
+                    <li><strong>Uso solo con autorizzazione del docente.</strong></li>
+                    <li><strong>Vietato durante ricreazioni e sullo scuolabus.</strong></li>
+                    <li>Vietata installazione app non adeguate al profilo studenti.</li>
+                    <li><strong>Vietato jailbreak</strong> (manomissione O.S.).</li>
+                    <li><strong>Vietato utilizzare connessioni diverse da WiFi SacraFamiglia-Studenti</strong> (no SIM, no VPN, no hotspot).</li>
+                    <li>Device portato a scuola <strong>funzionante e carico</strong>.</li>
+                </ul>
+                <span class="tag t-ref">Reg. Sez. 3</span>
+                <span class="tag t-sys">Profilo Scolastico H24</span>
+                <ul>
+                    <li>Profilo di gestione (Device Management) installato dalla scuola su tutti gli iPad.</li>
+                    <li><strong>Attivo H24</strong>, sia a scuola sia a casa, fino alla conclusione dell'anno scolastico.</li>
+                    <li>Disinstallazione automatica l'ultimo giorno di scuola.</li>
+                    <li><strong>Blocco fotocamera</strong> e videochiamate (FaceTime).</li>
+                    <li>Filtraggio contenuti e app non adeguate all'età.</li>
+                    <li><strong>Vietato rimuovere o aggirare il profilo scolastico.</strong></li>
+                    <li>Deroga uso extrascolastico: solo su richiesta famiglia con manleva scritta.</li>
+                </ul>
+                <span class="tag t-act">Responsabilità Famiglia</span>
+                <ul>
+                    <li>Monitorare uso iPad a casa.</li>
+                    <li>Verificare che il profilo scolastico sia sempre attivo.</li>
+                    <li>Accertarsi che non vengano creati gruppi di messaggistica non moderati o con contenuti inadeguati.</li>
+                    <li>Supportare uso domestico coerente con finalità educative.</li>
+                    <li>Rispondere di danni, smarrimenti o sottrazioni dovuti a incuria.</li>
+                    <li>I genitori sono di fatto amministratori del device (Apple ID intestato ai genitori).</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Controllo periodico iPad studenti: presenza e funzionamento profilo scolastico, assenza contenuti/app non conformi.</li>
+                    <li>Finalità educative e preventive, non ispettive (cfr. Reg. Sez. 3.4).</li>
+                    <li>Verifica MAC filtering Fortigate (mensile).</li>
+                    <li>Report dispositivi connessi alla rete (log Fortigate).</li>
+                    <li>Note disciplinari su Registro Elettronico.</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 3. LABORATORIO iMAC ═══ -->
+        <tr>
+            <td class="col-doc">3. Laboratorio iMac</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">Apple</span><br>
+                1 iMac 5K 27" (late 2015) + 28 iMac 21.5" (late 2015).<br>
+                macOS (da verificare aggiornamento da High Sierra 10.13).<br>
+                App: Pages, Numbers, Keynote, iMovie, Google Chrome.
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">Inventario</span>
+                <ul>
+                    <li>Inventario hardware con numeri seriali e stato dispositivo.</li>
+                    <li>Verifica integrità hardware (trimestrale).</li>
+                    <li>Aggiornamenti macOS centralizzati (coord. Animatore Digitale).</li>
+                    <li>Gestione garanzie e assistenza tecnica.</li>
+                    <li>Budget manutenzione e sostituzione pianificato.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-sys">Apple Remote Desktop</span>
+                <ul>
+                    <li>Supervisione schermi studenti dalla cattedra.</li>
+                    <li>Verifica logout di tutti gli account a fine ora.</li>
+                    <li>Segnalazione guasti/anomalie tramite modulo dedicato.</li>
+                    <li>Responsabilità disciplinare sugli alunni durante l'utilizzo.</li>
+                    <li>Prenotazione laboratorio su calendario condiviso.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Supervisione</span>
+                <ul>
+                    <li>Accesso al laboratorio <strong>solo con il docente</strong>.</li>
+                    <li>Uso cuffie personali (igiene).</li>
+                    <li>Non toccare cavi, prese, retro delle macchine.</li>
+                    <li>Non consumare cibo/bevande in laboratorio.</li>
+                    <li>Segnalare malfunzionamenti al docente.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Regolamento Lab</span>
+                <ul>
+                    <li>Non salvare file sul Desktop: usare Drive istituzionale o USB.</li>
+                    <li>Divieto di modifica sfondi, impostazioni di sistema, installazione software.</li>
+                    <li><strong>Logout obbligatorio a fine sessione.</strong></li>
+                    <li>Non collegare device personali via USB.</li>
+                    <li>Navigazione limitata ai siti indicati dal docente.</li>
+                    <li>Non salvare password del proprio account sui Mac del lab.</li>
+                    <li>App Store e configurazione sistema inibiti (profilo utente con restrizioni).</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Verifica integrità postazioni (settimanale).</li>
+                    <li>Controllo software installato (mensile).</li>
+                    <li>Log accessi laboratorio (registro presenze).</li>
+                    <li>Password accesso Mac: cambio ogni 3 mesi.</li>
+                    <li>Verifica assenza dati sensibili su HD locali.</li>
+                </ul>
+            </td>
+        </tr>
+
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- SEZIONE C: INFRASTRUTTURA E RETE                             -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <tr class="section-row">
+            <td colspan="7">C — INFRASTRUTTURA, RETE E SICUREZZA</td>
+        </tr>
+
+        <!-- ═══ 4. CONNETTIVITÀ & RETE ═══ -->
+        <tr>
+            <td class="col-doc">4. Connettività &amp; Rete</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">FortiGate 60F</span>
+                <span class="tag t-sys">FortiWLC MC1550</span><br>
+                <strong>FortiGate 60F</strong> — Hostname: FGT_SACRAFAMIGLIA. S/N: FGT60FTK2209F9PY. Firmware: v7.4.11 build2878 (Mature). WAN IP: 31.194.163.130. FortiGate Cloud: attivo (Free License, 9.91 GiB). Licenze attive: Support, Updates, IPS, AntiVirus, Web Filter, Rating. Admin: acerioli + Admin_scuola via HTTPS.<br>
+                <strong>FortiWLC MC1550</strong> — Controller Wi-Fi Meru (firmware 8.4-4build-8). Gestisce 21+ Access Point (8 secondaria, 6 primaria, 1 infanzia, 1 lab, 2 aula magna, 1 bar, uffici).<br>
+                <span style="font-size:9px; color:#e74c3c;">NOTA: certificato HTTPS interfaccia gestione FortiGate non trusted — da risolvere con certificato Let's Encrypt o CA interna.</span>
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">Rete Cablata LAN</span>
+                <ul>
+                    <li>Connessione Fibra via cavo LAN dedicato.</li>
+                    <li>Firewall profilo "Admin": nessuna restrizione didattica.</li>
+                    <li>Massima priorità di banda (QoS).</li>
+                    <li>Accesso diretto a portali MIUR, SIDI, NoiPA, Ag. Entrate.</li>
+                </ul>
+                <span style="font-size:9px; color:#999;">Storico: ADSL Telecom 20Mb su rete uffici (Router Cisco 877, Firewall Zywall). Verificare se ancora attiva come backup.</span>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-sys">WiFi SacraFamiglia-DOCENTI</span>
+                <ul>
+                    <li>SSID dedicato con accesso profilato tramite MAC filtering.</li>
+                    <li>Filtro contenuti standard (malware, phishing, siti non idonei).</li>
+                    <li>Accesso a piattaforme didattiche, streaming educativo, risorse online.</li>
+                    <li>Banda prioritaria rispetto al traffico studenti.</li>
+                    <li>L2 Security: WPA2-PSK. Password conosciuta solo dall'amministratore di rete.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Nessun Accesso Diretto</span>
+                <ul>
+                    <li>Nessun accesso diretto alla rete Wi-Fi per alunni primaria.</li>
+                    <li>Navigazione solo tramite device della scuola gestito dal docente.</li>
+                    <li>Access Point presenti nelle aule (6 AP) ma accesso riservato ai docenti.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-sys">WiFi SacraFamiglia-STUDENTI</span>
+                <ul>
+                    <li>Connessione tramite iPad con MAC address registrato.</li>
+                    <li>Rete attiva dalle <strong>ore 8:00 alle ore 16:45</strong>.</li>
+                    <li><strong>Content Filtering attivo</strong> (categorie bloccate: Adult Material, Gambling, Drugs, Violence, Social Media, Web Chat, Nudity).</li>
+                    <li>Firewall profilo "Studenti": altamente restrittivo.</li>
+                    <li>Logging completo del traffico (obbligo di legge).</li>
+                    <li><strong>Obbligo di connettersi SOLO a questa rete</strong> (cfr. Reg. Sez. 2.1 — no SIM, no VPN, no hotspot).</li>
+                </ul>
+                <span class="tag t-sys">WiFi SacraFamiglia-GUEST</span>
+                <ul>
+                    <li>Rete ospiti con content filtering identico alla rete studenti.</li>
+                    <li>Per visitatori, genitori durante eventi, fornitori.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Log traffico rete (obbligo normativo, conservazione 12 mesi).</li>
+                    <li>Report Fortigate: top siti bloccati (mensile).</li>
+                    <li>Verifica regole firewall (trimestrale).</li>
+                    <li>Speed test e verifica banda (semestrale).</li>
+                    <li>Aggiornamento firmware Fortigate (trimestrale).</li>
+                    <li>Verifica orari attivazione/disattivazione WiFi studenti.</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 5. EMAIL ISTITUZIONALE ═══ -->
+        <tr>
+            <td class="col-doc">5. Email Istituzionale</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">Google Workspace</span> dominio @sacrafamiglia.education<br>
+                <span class="tag t-sys">Soluzione-web</span> dominio @sacrafamiglia.education<br>
+                Webmail: webmail.soluzione-web.it
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">Caselle Segreteria</span>
+                <ul>
+                    <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b7c4d2d0c5d2c3d2c5ded6f7c4d6d4c5d6d1d6daded0dbded699d2d3c2d4d6c3ded8d9">[email&#160;protected]</a></li>
+                    <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31505c5c585f58424543504b585e5f5471425052435057505c58565d58501f545544525045585e5f">[email&#160;protected]</a></li>
+                    <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="eb98889e84878ac68d8a86828c87828aab988a88998a8d8a86828c87828ac58e8f9e888a9f828485">[email&#160;protected]</a></li>
+                    <li><strong>Accesso esclusivo delle segretarie.</strong></li>
+                    <li>Cambio password ogni 3 mesi.</li>
+                    <li>Uso esclusivamente lavorativo/istituzionale.</li>
+                    <li>CCN obbligatorio per invii massivi a famiglie.</li>
+                    <li>Firma istituzionale standard obbligatoria.</li>
+                    <li><strong>Divieto di inoltro comunicazioni riservate a mail private.</strong></li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-sys">Mail Docente</span>
+                <ul>
+                    <li>Canale ufficiale per comunicazioni scuola-docente e docente-famiglia.</li>
+                    <li>Firma istituzionale con nome, cognome, ruolo.</li>
+                    <li><strong>No inoltro automatico su casella privata personale.</strong></li>
+                    <li>Divieto utilizzo per comunicazioni commerciali o personali.</li>
+                    <li>Segnalazione immediata mail sospette (phishing) all'Animatore Digitale.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Limitato</span>
+                <ul>
+                    <li>Nessun invio autonomo di mail.</li>
+                    <li>Account istituzionale attivo ma con Gmail disabilitato da Admin Console.</li>
+                    <li>Comunicazioni scuola-famiglia tramite Registro Elettronico.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Regolamento</span>
+                <ul>
+                    <li>Mail istituzionale <strong>solo per scopi didattici</strong>.</li>
+                    <li><strong>Vietata iscrizione a siti, social, servizi terzi</strong> con la mail scolastica.</li>
+                    <li>Vietato invio di contenuti offensivi, catene, spam.</li>
+                    <li>Segnalare mail sospette al docente.</li>
+                    <li>No condivisione password mail.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Verifica account attivi vs. personale/studenti effettivi (annuale).</li>
+                    <li>Disattivazione account uscenti entro 24h.</li>
+                    <li>Monitoraggio phishing via Google Security Dashboard.</li>
+                    <li>Controllo regole inoltro non autorizzate (semestrale).</li>
+                    <li>Cambio password caselle condivise (ogni 3 mesi).</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 6. CONSERVAZIONE DATI ═══ -->
+        <tr>
+            <td class="col-doc">6. Conservazione Dati</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">NAS</span>
+                <span class="tag t-sys">Google Drive</span>
+                <span class="tag t-sys">Mastercon Cloud</span><br>
+                Backup, archiviazione, retention, disaster recovery, archivio cartaceo
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">Backup Digitale</span>
+                <ul>
+                    <li>Backup NAS → PC "segre1": incrementale giornaliero.</li>
+                    <li>Backup NAS → Google Drive istituzionale (100 GB).</li>
+                    <li>Backup database Mastercon: a cura del provider, eseguito più volte al giorno su server dedicati e delocalizzati.</li>
+                    <li>Scarto documenti obsoleti secondo piano di conservazione (protocollo, GDPR).</li>
+                    <li><strong>Test di restore: almeno 1 volta/anno.</strong></li>
+                    <li>Procedura disaster recovery documentata.</li>
+                </ul>
+                <span class="tag t-act">Archivio Cartaceo</span>
+                <ul>
+                    <li>Conservato in faldoni in segreteria e garage, in armadietti metallici chiusi a chiave.</li>
+                    <li>Studenti: conservazione fino a permanenza + 5 anni. Diplomi non ritirati, documenti esami, prove INVALSI.</li>
+                    <li>Dipendenti: conservazione a vita.</li>
+                    <li>Dati conservati: anagrafici, medici, bancari, certificazioni, situazione famigliare, autorizzazione trattamento dati.</li>
+                    <li>Responsabilità: Dirigente Scolastico.</li>
+                </ul>
+                <span class="tag t-act">Retention Normativa</span>
+                <ul>
+                    <li>Registri e atti scolastici: minimo 10 anni.</li>
+                    <li>Dati contabili/fiscali: minimo 10 anni.</li>
+                    <li>Videosorveglianza: max 48h (poi cancellazione automatica).</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Fine Anno</span>
+                <ul>
+                    <li>Download e archiviazione materiali didattici propri a fine anno.</li>
+                    <li>Pulizia corsi Classroom degli anni precedenti (archiviazione, non eliminazione).</li>
+                    <li>Verbali e documenti ufficiali: su Drive condiviso istituzionale.</li>
+                    <li>Nessun dato sensibile su cloud non istituzionale.</li>
+                    <li>Backup periodico materiali didattici (buona prassi).</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">N.A.</span>
+                <ul>
+                    <li>File alunni gestiti interamente dal docente.</li>
+                    <li>Elaborati cartacei: archiviazione a cura del docente di classe.</li>
+                    <li>File digitali: salvati dal docente su Drive istituzionale.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Responsabilità Personale</span>
+                <ul>
+                    <li>Salvataggio propri file su Drive istituzionale.</li>
+                    <li>Svuotare e riordinare Cloud a fine ciclo (3ª media).</li>
+                    <li>Non utilizzare servizi cloud esterni per materiali scolastici.</li>
+                    <li>Segnalare perdita accidentale di dati al docente.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Test restore backup (annuale, documentato).</li>
+                    <li>Verifica integrità NAS e dischi (semestrale).</li>
+                    <li>Audit retention: coerenza dati/normativa (annuale).</li>
+                    <li>Verifica SLA backup Mastercon (annuale).</li>
+                    <li>Verifica archivio cartaceo: integrità e chiusura (semestrale).</li>
+                    <li>Simulazione disaster recovery (annuale, consigliata).</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 6B. VIDEOSORVEGLIANZA ═══ -->
+        <tr>
+            <td class="col-doc">6B. Video-sorveglianza</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">DVR Videotrend</span><br>
+                VDTH_71608B-I-2K<br>
+                9 telecamere (8 fisse + 1 rotazione)
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">Impianto</span>
+                <ul>
+                    <li><strong>Zone ESTERNE:</strong> parcheggio (5 cam + telecamere aggiuntive installate successivamente).</li>
+                    <li><strong>Zone INTERNE:</strong> dispensa cucina (1 cam), corridoio aula informatica (1 cam), atrio e ingresso piscina (2 cam).</li>
+                    <li>Conservazione registrazioni: <strong>max 48h</strong>, poi cancellazione automatica.</li>
+                    <li>Monitor di controllo: accesso riservato ai Padri della Congregazione da rete locale.</li>
+                    <li>Autorizzazione impianto originaria: Ispettorato Territoriale di Brescia + verbale accordo sindacale dipendenti (26/03/2018).</li>
+                    <li><span style="color:#e74c3c; font-weight:700;">ATTENZIONE: telecamere aggiunte nel parcheggio dopo l'autorizzazione 2018 → verificare con DPO se necessario aggiornamento autorizzazione Ispettorato e informativa.</span></li>
+                    <li>Consenso del personale e autorizzazione DPO acquisiti.</li>
+                    <li>Planimetria con dislocazione e raggio d'azione telecamere: <strong>da aggiornare</strong> con nuove cam.</li>
+                </ul>
+                <span style="font-size:9px; color:#999;">Fornitore: PMG Sicurezza (pmgsicurezza.it).</span>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <ul>
+                    <li>Informati della presenza dell'impianto (obbligo trasparenza).</li>
+                    <li>Nessun accesso al monitor o alle registrazioni.</li>
+                    <li>Segnalare malfunzionamenti o manomissioni delle telecamere.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">N.A.</span>
+                <ul><li>Informati della presenza tramite cartelli (obbligo GDPR).</li></ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">N.A.</span>
+                <ul><li>Informati della presenza tramite cartelli (obbligo GDPR).</li></ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Verifica funzionamento telecamere (mensile).</li>
+                    <li>Controllo cancellazione automatica dopo 48h.</li>
+                    <li>Verifica conformità cartellonistica GDPR (annuale).</li>
+                    <li>Rinnovo autorizzazione Ispettorato se modifiche impianto.</li>
+                    <li>Manutenzione hardware: contratto con PMG Sicurezza.</li>
+                </ul>
+            </td>
+        </tr>
+
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- SEZIONE D: PRIVACY, AI E GOVERNANCE                          -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <tr class="section-row">
+            <td colspan="7">D — PRIVACY, AI E GOVERNANCE</td>
+        </tr>
+
+        <!-- ═══ 7. FOTO E VIDEO ═══ -->
+        <tr>
+            <td class="col-doc">7. Foto e Video</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-ref">Reg. Prot. 09/2026 – Sez. 2.2, 3.3</span><br>
+                <span class="tag t-sys">GDPR</span><br>
+                Riprese, pubblicazione, liberatorie, blocco fotocamera da profilo scolastico
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-sys">GDPR</span>
+                <ul>
+                    <li>Archivio centralizzato liberatorie firmate (cartaceo + digitale).</li>
+                    <li>Pubblicazione su sito/social <strong>solo per alunni con liberatoria valida</strong>.</li>
+                    <li>Verifica annuale validità liberatorie.</li>
+                    <li>Revoca consenso: rimozione immagini entro 48h.</li>
+                    <li>Registro contenuti pubblicati online (data, canale).</li>
+                    <li>Solo piattaforme autorizzate (sito sacrafamiglia.education, pagina social ufficiale).</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Protocollo Foto/Video</span>
+                <ul>
+                    <li>Foto/video alunni: <strong>solo con device della scuola</strong> (o iPad docente con trasferimento su Drive istituzionale e cancellazione dal device).</li>
+                    <li><strong>Vietata diffusione su WhatsApp privato, social personali, chat private.</strong></li>
+                    <li>Prima di fotografare: verificare liberatoria per tutti i soggetti ripresi.</li>
+                    <li>In gita/eventi: seguire protocollo comunicato dalla Dirigenza.</li>
+                    <li>Riconsegna temporanea device studenti in gita: <strong>solo per documentazione e comunicazione con famiglie</strong>, sotto supervisione.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Divieto</span>
+                <ul>
+                    <li><strong>Vietato fotografare o filmare</strong> compagni, docenti, ambienti scolastici.</li>
+                    <li>Nessun device personale = nessuna possibilità di ripresa.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-ref">Reg. Sez. 2.2 + 3.3</span>
+                <span class="tag t-act">Divieto Assoluto</span>
+                <ul>
+                    <li><strong>Divieto assoluto di utilizzare fotocamera, microfono o sistemi di registrazione</strong> per riprendere docenti, personale o compagni durante le lezioni e a loro insaputa.</li>
+                    <li>Il profilo scolastico <strong>disabilita la fotocamera</strong> H24 (a scuola e a casa).</li>
+                    <li>A casa: il blocco tutela lo studente da screenshot/riprese durante videochiamate.</li>
+                    <li>Conservazione e/o diffusione immagini/audio/video senza consenso = <strong>violazione disciplinare + responsabilità civili e penali</strong>.</li>
+                    <li>Diffusione in rete di immagini registrate a scuola = <strong>sospensione dalle lezioni</strong> (delibera CdC).</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Verifica profilo scolastico: blocco fotocamera attivo (controlli periodici).</li>
+                    <li>Monitoraggio contenuti web/social con immagini della scuola (trimestrale).</li>
+                    <li>Audit liberatorie: copertura completa (inizio anno).</li>
+                    <li>Verifica rimozione contenuti post-revoca consenso.</li>
+                    <li>Segnalazione al DPO per violazioni accertate.</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 8. USO AI ═══ -->
+        <tr>
+            <td class="col-doc">8. Uso AI</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-ref">Reg. Prot. 09/2026 – Sez. 4</span><br>
+                <span class="tag t-ref">AI Act – Reg. UE 2024/1689</span><br>
+                <span class="tag t-ref">Linee Guida MIM IA 2025</span><br>
+                <span class="tag t-sys">GenAI</span><br>
+                ChatGPT, Claude, Gemini, Copilot, NotebookLM, generatori immagini/audio.<br>
+                <strong>La scuola opera come «deployer» (art. 3 AI Act).</strong><br>
+                <span style="font-size:9px;color:#999;">Obblighi: DPIA (art. 35 GDPR), informativa IA agli interessati (artt. 13-14 GDPR), registro trattamenti aggiornato. Per sistemi ad alto rischio: FRIA (art. 27 AI Act). Cfr. Linee Guida MIM par. 3.3.</span>
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">GDPR / Sicurezza</span>
+                <ul>
+                    <li><strong>Divieto assoluto di inserire dati personali di alunni/famiglie in strumenti AI</strong> (nomi, CF, indirizzi, dati sanitari).</li>
+                    <li>Utilizzo AI per attività amministrative generiche consentito (bozze comunicazioni, sintesi documenti non sensibili).</li>
+                    <li>Nessun dato riservato della scuola in tool AI esterni.</li>
+                    <li>I sistemi AI devono garantire <strong>riservatezza, integrità e disponibilità dei dati</strong> (cfr. Reg. Sez. 4.3).</li>
+                    <li>La scuola si riserva di aggiornare/limitare strumenti e modalità d'uso AI in base a evoluzioni normative e valutazioni di rischio (cfr. Reg. Sez. 4.6).</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Human Oversight</span>
+                <ul>
+                    <li>AI come supporto didattico <strong>sotto controllo del docente</strong> (human oversight — Reg. Sez. 4.1).</li>
+                    <li><strong>L'AI non sostituisce la valutazione professionale del docente.</strong></li>
+                    <li><strong>Vietato usare AI per decisioni automatiche</strong> su valutazioni, percorsi o attribuzioni a carico degli studenti.</li>
+                    <li>Utilizzo consentito per: progettazione didattica, creazione materiali, esercizi, sintesi, traduzione.</li>
+                    <li><strong>Mai inserire dati identificativi degli alunni in tool AI.</strong></li>
+                    <li>Verifica elaborati studenti (anti-plagio, con attenzione a falsi positivi).</li>
+                    <li>Trasparenza: se si usa AI per materiali, dichiararlo.</li>
+                </ul>
+                <span class="tag t-act">AI Literacy</span>
+                <ul>
+                    <li>Promuovere alfabetizzazione AI per sviluppare pensiero critico, responsabilità e consapevolezza (cfr. Reg. Sez. 4.2, Linee Guida MIM cap. 4.4).</li>
+                    <li>Formazione periodica su potenzialità e rischi dell'AI generativa (a cura Animatore Digitale).</li>
+                    <li><strong>Percorso strutturato di 15 tappe</strong> di Cittadinanza Digitale integrato nel curricolo: include impatto ambientale AI (tappa 5), deepfake e manipolazione (tappe 2, 13), simulazioni Polizia Postale (tappa 15).</li>
+                    <li>Art. 4 AI Act: obbligo di alfabetizzazione IA per il personale che si occupa del funzionamento dei sistemi.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Solo Collettivo</span>
+                <ul>
+                    <li>Utilizzo AI <strong>solo in modo collettivo, guidato dal docente</strong> (es. chatbot proiettato alla LIM).</li>
+                    <li>Nessun accesso individuale a tool AI.</li>
+                    <li>Attività educative: "che cos'è l'AI", "come funziona", "cosa non sa fare".</li>
+                    <li>Approccio ludico-esplorativo, non produttivo.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-ref">Reg. Sez. 4.5</span>
+                <span class="tag t-act">Regolamento AI</span>
+                <ul>
+                    <li><strong>Vietato inserire dati personali non necessari</strong> (nome, cognome, contatti, foto, riferimenti a compagni o docenti) nei prompt.</li>
+                    <li>Gli output dell'AI <strong>devono essere verificati</strong>: l'AI può generare contenuti inesatti o fuorvianti (hallucination).</li>
+                    <li><strong>Vietato utilizzare l'AI per produrre contenuti offensivi, discriminatori, violenti o per aggirare compiti e verifiche.</strong></li>
+                    <li>Il docente può richiedere dimostrazione del processo (bozze, prompt utilizzati).</li>
+                    <li>Sensibilizzazione annuale su deepfake, disinformazione AI, bias algoritmici.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li><strong>DPIA obbligatoria</strong> prima dell'adozione di nuovi sistemi AI (art. 35 GDPR, Linee Guida MIM par. 3.3). Consultazione preventiva Garante se rischio residuo elevato.</li>
+                    <li>Verifica compiti: confronto stile/complessità con livello abituale alunno.</li>
+                    <li>Strumenti anti-plagio AI (GPTZero, Turnitin AI) — uso indicativo, non probatorio.</li>
+                    <li>Monitoraggio utilizzo tool AI su rete (log Fortigate).</li>
+                    <li>Survey annuale docenti: stato utilizzo e bisogni formativi AI.</li>
+                    <li>Aggiornamento lista strumenti AI autorizzati (Dirigenza + Animatore Digitale).</li>
+                    <li>Censimento sperimentazioni IA su piattaforma Unica MIM (Linee Guida MIM cap. 5).</li>
+                    <li>Verifica divieto sentiment analysis su studenti (art. 5 lett. f AI Act).</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 9. GESTIONE ACCESSI ═══ -->
+        <tr>
+            <td class="col-doc">9. Gestione Accessi</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-sys">Google Admin</span>
+                <span class="tag t-sys">Mastercon</span>
+                <span class="tag t-sys">Fortigate</span><br>
+                Credenziali, autenticazione, profilazione, onboarding/offboarding
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">Onboarding / Offboarding</span>
+                <ul>
+                    <li><strong>Disattivazione account ex-personale entro 24h</strong> dalla cessazione.</li>
+                    <li>Creazione account nuovi assunti: entro il primo giorno di servizio.</li>
+                    <li>Principio del <em>minimo privilegio</em>: solo risorse necessarie al ruolo.</li>
+                    <li>Profili Mastercon differenziati: Presidenza, Segreteria, Segreteria base, Presidi di settore, Coordinatori, Docenti.</li>
+                </ul>
+                <span class="tag t-sys">Policy Password</span>
+                <ul>
+                    <li>Complessità minima: 8 caratteri, maiuscola, numero, carattere speciale.</li>
+                    <li>Password criptata AES 256 bit (Mastercon/ScuolaOnLine).</li>
+                    <li>Securecode card opzionale per protezione ulteriore.</li>
+                    <li>Cambio password PC e NAS: ogni 3 mesi.</li>
+                    <li>Cambio obbligatorio in caso di sospetta compromissione.</li>
+                    <li>2FA su account amministrativi (fortemente consigliato).</li>
+                    <li>Registro account attivi con ruolo e data creazione.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Sicurezza Account</span>
+                <ul>
+                    <li>Cambio password consigliato ogni 6 mesi, obbligatorio se richiesto.</li>
+                    <li><strong>Logout obbligatorio dalla postazione di classe/laboratorio.</strong></li>
+                    <li>Non salvare password nel browser di postazioni condivise.</li>
+                    <li>Non comunicare credenziali ad altri docenti o personale ATA.</li>
+                    <li>2FA su account Google istituzionale (fortemente consigliata).</li>
+                    <li>Segnalare accessi anomali all'Animatore Digitale.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Regole Base</span>
+                <ul>
+                    <li>Non cedere credenziali a compagni.</li>
+                    <li>Non tentare di accedere all'account di altri.</li>
+                    <li>Se si dimentica la password: chiedere al docente.</li>
+                    <li>Formazione sulla creazione di password sicure (adeguata all'età).</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Responsabilità</span>
+                <ul>
+                    <li><strong>Segretezza assoluta della propria password.</strong></li>
+                    <li>Segnalazione immediata accessi anomali al docente.</li>
+                    <li>Non usare password identiche per account scolastico e personali.</li>
+                    <li>Logout obbligatorio da tutti i device condivisi.</li>
+                    <li>Non salvare password sui Mac del laboratorio.</li>
+                    <li>Apple ID intestato ai genitori e dato in uso ai figli: i genitori sono amministratori degli account e dei device.</li>
+                    <li>In caso di accesso non autorizzato: comunicare immediatamente; l'alunno risponde delle azioni se non segnala.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Audit log accessi Google Admin (semestrale).</li>
+                    <li>Verifica account attivi vs. personale/studenti effettivi (inizio anno + ogni variazione).</li>
+                    <li>Report accessi anomali da Google Security.</li>
+                    <li>Verifica compliance 2FA su account critici (trimestrale).</li>
+                    <li>Cambio password PC/NAS segreteria verificato (ogni 3 mesi).</li>
+                </ul>
+            </td>
+        </tr>
+
+        <!-- ═══ 8B. CLASSIFICAZIONE DATI ═══ -->
+        <tr>
+            <td class="col-doc">8B. Classificazione Dati</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-ref">GDPR – Art. 5, 9, 10</span><br>
+                <span class="tag t-ref">D.Lgs. 196/2003</span><br>
+                Classificazione dati in tre livelli: Pubblici, Interni, Riservati.<br>
+                Trattamento differenziato per categoria.
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">Classificazione Operativa</span>
+                <ul>
+                    <li><strong>PUBBLICI:</strong> contenuti sito web, comunicati, PTOF, orari, avvisi in Albo — diffusione libera.</li>
+                    <li><strong>INTERNI:</strong> circolari, verbali CdC, elenchi classi, comunicazioni Registro Elettronico — accesso solo personale autorizzato e famiglie interessate.</li>
+                    <li><strong>RISERVATI:</strong> dati sanitari (certificati medici, allergie, DSA/BES), PEI/PDP, dati giudiziari, situazione familiare, dati bancari rette — <strong>accesso strettamente limitato</strong>, cifratura ove possibile, archivio cartaceo chiuso a chiave.</li>
+                    <li>Applicazione massimario di scarto per documenti cartacei.</li>
+                    <li>Divieto assoluto di trasmettere dati riservati via email non istituzionale o WhatsApp.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Riservatezza</span>
+                <ul>
+                    <li><strong>Massima riservatezza su PEI, PDP, note disciplinari, dati sanitari.</strong></li>
+                    <li>Non lasciare documenti sensibili incustoditi (cartella aperta sulla cattedra, schermo visibile).</li>
+                    <li>Non discutere dati riservati di studenti in contesti non protetti (corridoio, chat WhatsApp).</li>
+                    <li>Condivisione dati sensibili solo tramite canali istituzionali (Registro, Drive con permessi).</li>
+                    <li>In caso di dubbio sulla classificazione, consultare il DPO o la Dirigenza.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Educazione alla Privacy</span>
+                <ul>
+                    <li>Attività di sensibilizzazione: "cosa sono i dati personali?"</li>
+                    <li>Non condividere informazioni personali (indirizzo, telefono) con compagni o online.</li>
+                    <li>Rispettare la privacy dei compagni (non diffondere fatti altrui).</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Responsabilità</span>
+                <ul>
+                    <li><strong>Non condividere password con amici.</strong></li>
+                    <li>Rispettare la privacy dei compagni: non diffondere informazioni personali, voti, note.</li>
+                    <li>Non fotografare documenti della scuola (registri, comunicazioni riservate).</li>
+                    <li>Segnalare al docente eventuali violazioni di privacy osservate.</li>
+                    <li>Percorso Cittadinanza Digitale: tappe 6-10 (Protezione) e 15 (Commissariato Digitale) coprono specificamente questo tema.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Audit classificazione dati su Drive condiviso (semestrale).</li>
+                    <li>Verifica assenza dati riservati su NAS non protetto (semestrale).</li>
+                    <li>Controllo permessi condivisione Google Drive per documenti sensibili (trimestrale).</li>
+                    <li>Verifica chiusura armadietti archivio cartaceo (mensile).</li>
+                    <li>Segnalazione al DPO di eventuali violazioni nella classificazione.</li>
+                </ul>
+            </td>
+        </tr>
+
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- SEZIONE E: SANZIONI                                           -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <tr class="section-row">
+            <td colspan="7">E — INTERVENTI DISCIPLINARI E SANZIONI (Reg. Prot. 09/2026 – Sez. 5)</td>
+        </tr>
+
+        <!-- ═══ 10. SANZIONI ═══ -->
+        <tr>
+            <td class="col-doc">10. Sanzioni Digitali</td>
+            <td class="col-scope" contenteditable="true">
+                <span class="tag t-ref">Reg. Prot. 09/2026 – Sez. 5</span><br>
+                <span class="tag t-ref">DPR 249/1998</span><br>
+                <span class="tag t-ref">D.P.R. 134/2025</span><br>
+                Interventi proporzionati, educativi, con impatto su condotta
+            </td>
+            <td class="col-segr" contenteditable="true">
+                <span class="tag t-act">Gestione Amministrativa</span>
+                <ul>
+                    <li>Registrazione provvedimenti disciplinari su Registro Elettronico.</li>
+                    <li>Comunicazione formale alle famiglie (lettera/email ufficiale).</li>
+                    <li>Archiviazione provvedimenti nel fascicolo dell'alunno.</li>
+                    <li>Supporto alla Dirigenza per convocazioni CdC straordinari.</li>
+                </ul>
+            </td>
+            <td class="col-docent" contenteditable="true">
+                <span class="tag t-act">Dovere di Vigilanza</span>
+                <ul>
+                    <li>Vigilanza sui comportamenti degli alunni in <strong>tutti gli spazi scolastici</strong>.</li>
+                    <li>Vigilanza attiva anche durante visite guidate e viaggi d'istruzione (= "attività didattiche" a tutti gli effetti).</li>
+                    <li>In gita: ritiro device, riconsegna temporanea solo per documentazione e comunicazioni.</li>
+                </ul>
+                <span class="tag t-act">Procedura</span>
+                <ul>
+                    <li><strong>1ª infrazione:</strong> ritiro immediato cellulare → consegna in presidenza + segnalazione genitori + rimodulazione/restrizione profilo scolastico iPad.</li>
+                    <li><strong>Infrazioni successive:</strong> limitazione temporanea uso/funzionalità iPad + attività in modalità analogica (solo cartaceo).</li>
+                    <li><strong>Tutte le infrazioni:</strong> applicazione Regolamento interno disciplina + conseguenze su voto condotta (scrutinio quadrimestrale).</li>
+                    <li><strong>Diffusione in rete di immagini registrate a scuola:</strong> sospensione dalle lezioni (delibera CdC).</li>
+                    <li>Interventi adottati dalla Direzione, sentito il CdC.</li>
+                    <li>Famiglia sempre informata e coinvolta in percorso di recupero della consapevolezza d'uso.</li>
+                </ul>
+            </td>
+            <td class="col-prim" contenteditable="true">
+                <span class="tag t-act">Sanzioni Applicabili</span>
+                <ul>
+                    <li>Ritiro device non autorizzato e restituzione al genitore.</li>
+                    <li>Nota disciplinare sul Registro.</li>
+                    <li>Provvedimenti da Regolamento interno di disciplina.</li>
+                    <li>Coinvolgimento famiglia nel percorso educativo.</li>
+                </ul>
+            </td>
+            <td class="col-sec" contenteditable="true">
+                <span class="tag t-act">Scala Sanzionatoria</span>
+                <ul>
+                    <li><strong>1ª infrazione:</strong> ritiro cellulare → presidenza + segnalazione genitori; rimodulazione profilo scolastico iPad.</li>
+                    <li><strong>Successive:</strong> limitazione iPad + modalità analogica (solo cartaceo).</li>
+                    <li><strong>Tutte:</strong> Regolamento disciplina + impatto voto condotta.</li>
+                    <li><strong>Diffusione immagini in rete:</strong> sospensione (CdC) + possibile responsabilità civile/penale.</li>
+                    <li>Famiglia sempre informata e coinvolta.</li>
+                    <li>Percorso di recupero consapevolezza d'uso.</li>
+                </ul>
+            </td>
+            <td class="col-check">
+                <ul>
+                    <li>Registro note disciplinari digitali (Registro Elettronico).</li>
+                    <li>Tracciamento infrazioni per tipologia e recidiva.</li>
+                    <li>Verifica impatto su voto condotta in sede di scrutinio.</li>
+                    <li>Report annuale infrazioni digitali (Animatore Digitale → Dirigenza).</li>
+                    <li>Monitoraggio efficacia percorsi di recupero.</li>
+                </ul>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+<!-- PASSWORD PROTECTION OVERLAY -->
+<div id="lockScreen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#1a252f;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:'Segoe UI',sans-serif;">
+    <div style="background:#2c3e50;padding:40px 50px;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.5);text-align:center;max-width:400px;">
+        <div style="font-size:32px;margin-bottom:8px;">&#x1F512;</div>
+        <h2 style="color:#ecf0f1;margin:0 0 6px;font-size:18px;letter-spacing:1px;">POLICY MASTER CHART</h2>
+        <p style="color:#95a5a6;font-size:11px;margin:0 0 20px;">Scuola Sacra Famiglia — Orzinuovi (BS)</p>
+        <input id="pwdInput" type="password" placeholder="Password di accesso" 
+            style="width:100%;padding:12px;border:2px solid #34495e;border-radius:4px;background:#1a252f;color:#ecf0f1;font-size:14px;text-align:center;box-sizing:border-box;outline:none;"
+            onkeydown="if(event.key==='Enter')checkPwd()">
+        <button onclick="checkPwd()" 
+            style="width:100%;margin-top:12px;padding:12px;background:#27ae60;color:white;border:none;border-radius:4px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;">
+            Accedi
+        </button>
+        <p id="pwdError" style="color:#e74c3c;font-size:11px;margin:8px 0 0;display:none;">Password non corretta</p>
+    </div>
+</div>
+
+<script>
+    /* ═══════════════════════════════════════════════ */
+    /* PASSWORD — cambiare qui la password di accesso  */
+    /* ═══════════════════════════════════════════════ */
+    const POLICY_PWD_HASH = 'mandotti26'; // CAMBIARE CON PASSWORD SCELTA
+
+    function checkPwd() {
+        const input = document.getElementById('pwdInput').value;
+        if (input === POLICY_PWD_HASH) {
+            document.getElementById('lockScreen').style.display = 'none';
+            sessionStorage.setItem('policy_auth', '1');
+        } else {
+            document.getElementById('pwdError').style.display = 'block';
+            document.getElementById('pwdInput').value = '';
+            document.getElementById('pwdInput').style.borderColor = '#e74c3c';
+            setTimeout(() => { document.getElementById('pwdInput').style.borderColor = '#34495e'; }, 1500);
+        }
+    }
+    // Auto-unlock se già autenticato nella sessione
+    if (sessionStorage.getItem('policy_auth') === '1') {
+        document.getElementById('lockScreen').style.display = 'none';
+    } else {
+        document.getElementById('pwdInput').focus();
+    }
+
+    /* ═══════════════════════════════════════════════ */
+    /* TAG INSERIMENTO (funzionalità originale)       */
+    /* ═══════════════════════════════════════════════ */
+    function askTag(cssClass) {
+        const labels = {
+            't-sys': "Nome SISTEMA (es. Fibra, Registro):",
+            't-act': "Tipo AZIONE (es. Divieto, Backup):",
+            't-ref': "Riferimento Normativo (es. GDPR, Reg. Sez. 2):"
+        };
+        let userText = prompt(labels[cssClass] || "Testo tag:");
+        if (userText && userText.trim() !== "") insertTag(cssClass, userText);
+    }
+
+    function insertTag(typeClass, textContent) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+        const range = selection.getRangeAt(0);
+        let container = range.commonAncestorContainer;
+        while (container && container.nodeName !== 'TD') {
+            container = container.parentElement;
+            if (!container) { alert("Clicca prima in una cella!"); return; }
+        }
+        const span = document.createElement("span");
+        span.className = "tag " + typeClass;
+        span.textContent = textContent;
+        span.contentEditable = "false";
+        const space = document.createTextNode("\u00A0");
+        range.deleteContents();
+        range.insertNode(space);
+        range.insertNode(span);
+        range.setStartAfter(space);
+        range.setEndAfter(space);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    /* ═══════════════════════════════════════════════ */
+    /* SALVA HTML (download locale)                    */
+    /* ═══════════════════════════════════════════════ */
+    function downloadHTML() {
+        const clone = document.documentElement.cloneNode(true);
+        clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        const lock = clone.querySelector('#lockScreen');
+        if (lock) lock.style.display = '';
+        const blob = new Blob(['<!DOCTYPE html>' + clone.outerHTML], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'Master_Policy_v3_' + new Date().toISOString().slice(0,10) + '.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    /* ═══════════════════════════════════════════════ */
+    /* GOOGLE SHEETS — Salvataggio dati via pixel      */
+    /* ═══════════════════════════════════════════════ */
+    // ISTRUZIONI:
+    // 1. Creare un Google Sheet con colonne: timestamp | sezione | cella | contenuto
+    // 2. Deployare lo script doGet(e) in Apps Script (vedi sotto)
+    // 3. Incollare l'URL qui:
+    const SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxwIKnpfh1-njYQLhy4o-EglJMorEA57Trkvm7Ch8Gtio9SkF9A-KVeAzpR9QEAhLN8VQ/exec';
+
+    function saveToSheets() {
+        if (!SHEETS_ENDPOINT) {
+            alert('Endpoint Google Sheets non configurato.\nVedi istruzioni nel codice sorgente.');
+            return;
+        }
+        const cells = document.querySelectorAll('[contenteditable="true"]');
+        let saved = 0;
+        cells.forEach(cell => {
+            const row = cell.closest('tr');
+            const docCell = row ? row.querySelector('.col-doc') : null;
+            const sezione = docCell ? docCell.textContent.trim() : 'N/D';
+            const colClass = [...cell.classList].find(c => c.startsWith('col-'));
+            const contenuto = cell.innerHTML.trim();
+            if (contenuto) {
+                const params = new URLSearchParams({
+                    sezione: sezione,
+                    colonna: colClass || '',
+                    contenuto: contenuto.substring(0, 5000),
+                    ts: new Date().toISOString()
+                });
+                new Image().src = SHEETS_ENDPOINT + '?' + params.toString();
+                saved++;
+            }
+        });
+        alert('Inviate ' + saved + ' celle a Google Sheets.\nVerifica il foglio tra qualche secondo.');
+    }
+
+    /*
+    ═══════════════════════════════════════════════════════════
+    APPS SCRIPT DA DEPLOYARE SU GOOGLE SHEETS:
+    ═══════════════════════════════════════════════════════════
+    
+    function doGet(e) {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var sheet = ss.getSheetByName('PolicyData') || ss.insertSheet('PolicyData');
+      
+      // Header se foglio vuoto
+      if (sheet.getLastRow() === 0) {
+        sheet.appendRow(['Timestamp', 'Sezione', 'Colonna', 'Contenuto']);
+      }
+      
+      var ts = e.parameter.ts || new Date().toISOString();
+      var sezione = e.parameter.sezione || '';
+      var colonna = e.parameter.colonna || '';
+      var contenuto = e.parameter.contenuto || '';
+      
+      sheet.appendRow([ts, sezione, colonna, contenuto]);
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({status: 'ok'}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Deploy: Esegui come "Io" → Accesso "Chiunque"
+    ═══════════════════════════════════════════════════════════
+    */
+</script>
+
+</body>
+</html>
+      
