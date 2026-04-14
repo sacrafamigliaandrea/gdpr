@@ -150,8 +150,8 @@
     <button class="btn btn-ref" onclick="askTag('t-ref')">+ Rif. Norm.</button>
     
     <span style="flex-grow: 1;"></span>
-    <button class="btn" style="background:#8e44ad;" onclick="saveToSheets()">&#x2601; Salva su Sheets</button>
-    <button class="btn btn-save" onclick="downloadHTML()">&#x1F4BE; Salva HTML</button>
+    <span id="syncStatus" style="font-size:10px; opacity:0.7; margin-right:10px;">&#x25CF; Non sincronizzato</span>
+    <button class="btn" style="background:#8e44ad;" onclick="saveAllToSheets()">&#x2601; Salva tutto</button>
     <button class="btn btn-print" onclick="window.print()">&#x1F5A8; Stampa PDF</button>
 </div>
 
@@ -1344,15 +1344,21 @@
 
 <script>
     /* ═══════════════════════════════════════════════ */
-    /* PASSWORD — cambiare qui la password di accesso  */
+    /* CONFIGURAZIONE                                  */
     /* ═══════════════════════════════════════════════ */
-    const POLICY_PWD_HASH = 'mandotti26'; // CAMBIARE CON PASSWORD SCELTA
+    const POLICY_PWD_HASH = 'mandotti26';
+    const SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxwIKnpfh1-njYQLhy4o-EglJMorEA57Trkvm7Ch8Gtio9SkF9A-KVeAzpR9QEAhLN8VQ/exec';
+    // ↑ DOPO IL NUOVO DEPLOYMENT DELLO SCRIPT v2, SOSTITUIRE CON IL NUOVO URL ↑
 
+    /* ═══════════════════════════════════════════════ */
+    /* PASSWORD                                        */
+    /* ═══════════════════════════════════════════════ */
     function checkPwd() {
         const input = document.getElementById('pwdInput').value;
         if (input === POLICY_PWD_HASH) {
             document.getElementById('lockScreen').style.display = 'none';
             sessionStorage.setItem('policy_auth', '1');
+            loadFromSheets(); // Carica dati dopo login
         } else {
             document.getElementById('pwdError').style.display = 'block';
             document.getElementById('pwdInput').value = '';
@@ -1360,15 +1366,157 @@
             setTimeout(() => { document.getElementById('pwdInput').style.borderColor = '#34495e'; }, 1500);
         }
     }
-    // Auto-unlock se già autenticato nella sessione
+
     if (sessionStorage.getItem('policy_auth') === '1') {
         document.getElementById('lockScreen').style.display = 'none';
+        loadFromSheets();
     } else {
         document.getElementById('pwdInput').focus();
     }
 
     /* ═══════════════════════════════════════════════ */
-    /* TAG INSERIMENTO (funzionalità originale)       */
+    /* SYNC STATUS                                     */
+    /* ═══════════════════════════════════════════════ */
+    function setStatus(text, color) {
+        const el = document.getElementById('syncStatus');
+        el.innerHTML = text;
+        el.style.color = color || '#aaa';
+    }
+
+    /* ═══════════════════════════════════════════════ */
+    /* CARICA DA SHEETS (auto all'apertura)            */
+    /* ═══════════════════════════════════════════════ */
+    function loadFromSheets() {
+        if (!SHEETS_ENDPOINT) return;
+        setStatus('&#x21BB; Caricamento dati...', '#f39c12');
+
+        fetch(SHEETS_ENDPOINT)
+            .then(r => r.text())
+            .then(text => {
+                let json;
+                try { json = JSON.parse(text); } catch(e) {
+                    setStatus('&#x2716; Errore parsing dati', '#e74c3c');
+                    return;
+                }
+                if (json.status !== 'ok' || !json.data || json.data.length === 0) {
+                    setStatus('&#x25CF; Nessun dato salvato — modifica e salva', '#95a5a6');
+                    initAutoSave();
+                    return;
+                }
+                populateCells(json.data);
+                setStatus('&#x2714; Caricati ' + json.data.length + ' celle — ' + new Date().toLocaleTimeString('it-IT'), '#27ae60');
+                initAutoSave();
+            })
+            .catch(err => {
+                console.error('Load error:', err);
+                setStatus('&#x2716; Errore di rete', '#e74c3c');
+                initAutoSave();
+            });
+    }
+
+    function populateCells(data) {
+        const rows = document.querySelectorAll('tbody tr:not(.section-row)');
+        data.forEach(item => {
+            for (const row of rows) {
+                const docCell = row.querySelector('.col-doc');
+                if (docCell && docCell.textContent.trim() === item.sezione) {
+                    const cell = row.querySelector('.' + item.colonna);
+                    if (cell && cell.hasAttribute('contenteditable')) {
+                        cell.innerHTML = item.contenuto;
+                    }
+                    break;
+                }
+            }
+        });
+    }
+
+    /* ═══════════════════════════════════════════════ */
+    /* AUTO-SAVE SU BLUR (cella per cella)             */
+    /* ═══════════════════════════════════════════════ */
+    function initAutoSave() {
+        document.querySelectorAll('[contenteditable="true"]').forEach(cell => {
+            // Salva contenuto originale per confronto
+            cell.dataset.original = cell.innerHTML;
+
+            cell.addEventListener('blur', function() {
+                // Salva solo se il contenuto è cambiato
+                if (this.innerHTML === this.dataset.original) return;
+                this.dataset.original = this.innerHTML;
+                saveSingleCell(this);
+            });
+        });
+    }
+
+    function saveSingleCell(cell) {
+        const row = cell.closest('tr');
+        const docCell = row ? row.querySelector('.col-doc') : null;
+        const sezione = docCell ? docCell.textContent.trim() : 'N/D';
+        const colClass = [...cell.classList].find(c => c.startsWith('col-'));
+        const contenuto = cell.innerHTML.trim();
+
+        if (!contenuto || !SHEETS_ENDPOINT) return;
+
+        setStatus('&#x21BB; Salvataggio...', '#f39c12');
+
+        const params = new URLSearchParams({
+            sezione: sezione,
+            colonna: colClass || '',
+            contenuto: contenuto.substring(0, 5000),
+            ts: new Date().toISOString()
+        });
+        new Image().src = SHEETS_ENDPOINT + '?' + params.toString();
+
+        // Feedback visivo sulla cella
+        cell.style.outline = '2px solid #27ae60';
+        setTimeout(() => {
+            cell.style.outline = '';
+            setStatus('&#x2714; Salvato — ' + new Date().toLocaleTimeString('it-IT'), '#27ae60');
+        }, 800);
+    }
+
+    /* ═══════════════════════════════════════════════ */
+    /* SALVA TUTTO (pulsante manuale)                  */
+    /* ═══════════════════════════════════════════════ */
+    function saveAllToSheets() {
+        if (!SHEETS_ENDPOINT) return;
+        setStatus('&#x21BB; Salvataggio completo...', '#f39c12');
+
+        const cells = document.querySelectorAll('[contenteditable="true"]');
+        let saved = 0;
+        let delay = 0;
+
+        cells.forEach(cell => {
+            const row = cell.closest('tr');
+            const docCell = row ? row.querySelector('.col-doc') : null;
+            const sezione = docCell ? docCell.textContent.trim() : 'N/D';
+            const colClass = [...cell.classList].find(c => c.startsWith('col-'));
+            const contenuto = cell.innerHTML.trim();
+            if (contenuto) {
+                // Piccolo delay tra le richieste per non sovraccaricare
+                setTimeout(() => {
+                    const params = new URLSearchParams({
+                        sezione: sezione,
+                        colonna: colClass || '',
+                        contenuto: contenuto.substring(0, 5000),
+                        ts: new Date().toISOString()
+                    });
+                    new Image().src = SHEETS_ENDPOINT + '?' + params.toString();
+                }, delay);
+                delay += 150; // 150ms tra una cella e l'altra
+                saved++;
+            }
+        });
+
+        // Aggiorna original per evitare re-save su blur
+        cells.forEach(c => c.dataset.original = c.innerHTML);
+
+        setTimeout(() => {
+            setStatus('&#x2714; Salvate ' + saved + ' celle — ' + new Date().toLocaleTimeString('it-IT'), '#27ae60');
+        }, delay + 500);
+    }
+
+    /* ═══════════════════════════════════════════════ */
+    /* TAG INSERIMENTO                                 */
     /* ═══════════════════════════════════════════════ */
     function askTag(cssClass) {
         const labels = {
@@ -1402,88 +1550,6 @@
         selection.removeAllRanges();
         selection.addRange(range);
     }
-
-    /* ═══════════════════════════════════════════════ */
-    /* SALVA HTML (download locale)                    */
-    /* ═══════════════════════════════════════════════ */
-    function downloadHTML() {
-        const clone = document.documentElement.cloneNode(true);
-        clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
-        const lock = clone.querySelector('#lockScreen');
-        if (lock) lock.style.display = '';
-        const blob = new Blob(['<!DOCTYPE html>' + clone.outerHTML], { type: 'text/html' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'Master_Policy_v3_' + new Date().toISOString().slice(0,10) + '.html';
-        a.click();
-        URL.revokeObjectURL(a.href);
-    }
-
-    /* ═══════════════════════════════════════════════ */
-    /* GOOGLE SHEETS — Salvataggio dati via pixel      */
-    /* ═══════════════════════════════════════════════ */
-    // ISTRUZIONI:
-    // 1. Creare un Google Sheet con colonne: timestamp | sezione | cella | contenuto
-    // 2. Deployare lo script doGet(e) in Apps Script (vedi sotto)
-    // 3. Incollare l'URL qui:
-    const SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxwIKnpfh1-njYQLhy4o-EglJMorEA57Trkvm7Ch8Gtio9SkF9A-KVeAzpR9QEAhLN8VQ/exec';
-
-    function saveToSheets() {
-        if (!SHEETS_ENDPOINT) {
-            alert('Endpoint Google Sheets non configurato.\nVedi istruzioni nel codice sorgente.');
-            return;
-        }
-        const cells = document.querySelectorAll('[contenteditable="true"]');
-        let saved = 0;
-        cells.forEach(cell => {
-            const row = cell.closest('tr');
-            const docCell = row ? row.querySelector('.col-doc') : null;
-            const sezione = docCell ? docCell.textContent.trim() : 'N/D';
-            const colClass = [...cell.classList].find(c => c.startsWith('col-'));
-            const contenuto = cell.innerHTML.trim();
-            if (contenuto) {
-                const params = new URLSearchParams({
-                    sezione: sezione,
-                    colonna: colClass || '',
-                    contenuto: contenuto.substring(0, 5000),
-                    ts: new Date().toISOString()
-                });
-                new Image().src = SHEETS_ENDPOINT + '?' + params.toString();
-                saved++;
-            }
-        });
-        alert('Inviate ' + saved + ' celle a Google Sheets.\nVerifica il foglio tra qualche secondo.');
-    }
-
-    /*
-    ═══════════════════════════════════════════════════════════
-    APPS SCRIPT DA DEPLOYARE SU GOOGLE SHEETS:
-    ═══════════════════════════════════════════════════════════
-    
-    function doGet(e) {
-      var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var sheet = ss.getSheetByName('PolicyData') || ss.insertSheet('PolicyData');
-      
-      // Header se foglio vuoto
-      if (sheet.getLastRow() === 0) {
-        sheet.appendRow(['Timestamp', 'Sezione', 'Colonna', 'Contenuto']);
-      }
-      
-      var ts = e.parameter.ts || new Date().toISOString();
-      var sezione = e.parameter.sezione || '';
-      var colonna = e.parameter.colonna || '';
-      var contenuto = e.parameter.contenuto || '';
-      
-      sheet.appendRow([ts, sezione, colonna, contenuto]);
-      
-      return ContentService
-        .createTextOutput(JSON.stringify({status: 'ok'}))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // Deploy: Esegui come "Io" → Accesso "Chiunque"
-    ═══════════════════════════════════════════════════════════
-    */
 </script>
 
 </body>
